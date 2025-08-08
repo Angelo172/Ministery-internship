@@ -18,3 +18,5 @@ class Articles extends Model
 }
 
 }
+
+//ghb h h
