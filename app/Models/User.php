@@ -10,8 +10,8 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
-use App\Http\Models\Articles;
-use App\Http\Models\Sliders;
+use App\Models\Articles;
+use App\Models\Sliders;
 
 class User extends Authenticatable
 {
@@ -69,6 +69,6 @@ class User extends Authenticatable
 
     public function sliders(): HasMany
     {
-        return $this->hasMany(Slisers::class);
+        return $this->hasMany(Sliders::class);
     }
 }
