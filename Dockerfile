@@ -2,8 +2,8 @@ FROM php:8.2-fpm-alpine
 
 WORKDIR /var/www/html
 
-# Installer les dépendances système et les extensions PHP nécessaires (pdo, pdo_mysql, curl, etc.)
-RUN apk add --no-cache nginx curl \
+# Installer les dépendances système et les extensions PHP nécessaires (IMPORTANT : ajout de ca-certificates)
+RUN apk add --no-cache nginx curl ca-certificates \
     && docker-php-ext-install pdo pdo_mysql opcache
 
 # --- Installation robuste de Composer ---
