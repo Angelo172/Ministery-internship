@@ -1,4 +1,3 @@
-# Utilise l'image Debian standard (plus complète qu'Alpine)
 FROM php:8.2-fpm
 
 WORKDIR /var/www/html
@@ -8,14 +7,13 @@ RUN apt-get update && apt-get install -y \
     nginx curl libpng-dev libjpeg-dev \
     && docker-php-ext-install pdo pdo_mysql opcache gd
 
-# Installer Composer globalement
-RUN curl -sS getcomposer.org | php -- --install-dir=/usr/local/bin --filename=composer
-
-# Copier le code de l'application
+# Copier le code de l'application D'ABORD
 COPY . .
 
-# Installer les dépendances Composer dans le projet
-RUN composer install --no-dev --optimize-autoloader
+# --- Installer Composer ET les dépendances du projet DANS LA MÊME ÉTAPE RUN ---
+RUN curl -sS getcomposer.org | php -- --install-dir=/usr/local/bin --filename=composer \
+    && composer install --no-dev --optimize-autoloader
+# --- Fin étape combinée ---
 
 # Configurer Nginx
 COPY nginx.conf /etc/nginx/nginx.conf
