@@ -2,9 +2,9 @@ FROM php:8.2-fpm-alpine
 
 WORKDIR /var/www/html
 
-# Installer les dépendances système et les extensions PHP nécessaires (IMPORTANT : ajout de ca-certificates)
-RUN apk add --no-cache nginx curl ca-certificates \
-    && docker-php-ext-install pdo pdo_mysql opcache
+# Installer les dépendances système et les extensions PHP nécessaires (IMPORTANT: ajout de openssl, phar, iconv)
+RUN apk add --no-cache nginx curl ca-certificates openssl iconv \
+    && docker-php-ext-install pdo pdo_mysql opcache iconv
 
 # --- Installation robuste de Composer ---
 # Télécharger le script d'installation dans un répertoire temporaire
