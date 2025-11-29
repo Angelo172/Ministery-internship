@@ -1,26 +1,17 @@
-FROM php:8.2-fpm-alpine
+# Utilise l'image Debian standard (plus complète qu'Alpine)
+FROM php:8.2-fpm
 
 WORKDIR /var/www/html
 
-# Installer les dépendances système et les extensions PHP nécessaires (CORRECTION DE ICONV)
-RUN apk add --no-cache nginx curl ca-certificates openssl gnu-libiconv \
-    && docker-php-ext-install pdo pdo_mysql opcache \
-    && docker-php-ext-enable iconv
+# Installer les dépendances système et les extensions PHP nécessaires (openssl, pdo, mysqli, etc.)
+RUN apt-get update && apt-get install -y \
+    nginx curl libpng-dev libjpeg-dev \
+    && docker-php-ext-install pdo pdo_mysql opcache gd
 
-# --- Installation robuste de Composer ---
-# Télécharger le script d'installation dans un répertoire temporaire
-WORKDIR /tmp
-RUN curl -sS getcomposer.org -o composer-installer.php
+# Installer Composer globalement
+RUN curl -sS getcomposer.org | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Exécuter le script pour installer Composer globalement, puis le rendre exécutable
-RUN php composer-installer.php --install-dir=/usr/local/bin --filename=composer \
-    && chmod +x /usr/local/bin/composer
-
-# Revenir au répertoire de travail principal
-WORKDIR /var/www/html
-# --- Fin installation Composer ---
-
-# Copier le code de l'application depuis votre dépôt GitHub
+# Copier le code de l'application
 COPY . .
 
 # Installer les dépendances Composer dans le projet
