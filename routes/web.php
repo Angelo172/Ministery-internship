@@ -1,6 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ArticlesController;
+use App\Http\Controllers\SlidersController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\FrontController;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,10 +18,10 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/',[App\Http\Controllers\FrontController::class,'index'])->name('front.index');
+/* Route::get('/', function () {
+    return view('tp');
+}); */
 
 Route::middleware([
     'auth:sanctum',
@@ -26,3 +32,10 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+Route::resource('articles', ArticlesController::class);
+Route::resource('sliders',SlidersController::class);
+Route::resource('users', UserController::class);
+Route::resource('roles', RoleController::class);
+Route::get('/actualites', [App\Http\Controllers\PostController::class, 'index'])->name('actualites.index');
+Route::get('/actualites/{article}', [App\Http\Controllers\PostController::class, 'show'])->name('actualites.show');
+Route::get('/search',[App\Http\Controllers\PostController::class, 'search'])->name('actualites.search');

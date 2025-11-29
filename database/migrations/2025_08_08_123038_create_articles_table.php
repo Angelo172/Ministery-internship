@@ -15,12 +15,12 @@ return new class extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->string('description');
             $table->enum('status',['draft','actived','archived'])->default('draft');
             $table->date('date');
 
-            $table->foreignId('users_id')
+            $table->foreignId('users_id')->nullable()
             ->constrained()
             ->onUpdate('cascade')
             ->onDelete('cascade');

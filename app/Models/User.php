@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -64,11 +65,43 @@ class User extends Authenticatable
 
         public function articles(): HasMany
     {
-        return $this->hasMany(Articles::class);
+        return $this->hasMany(Article::class);
     }
 
     public function sliders(): HasMany
     {
-        return $this->hasMany(Sliders::class);
+        return $this->hasMany(Slider::class);
+    }
+
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    // Vérifie si l’utilisateur a un rôle spécifique
+    public function hasRole($role)
+    {
+        return $this->roles()->where('name', $role)->exists();
+    }
+
+    // Assigne un rôle
+    public function assignRole($role)
+    {
+        if (is_string($role)) {
+            $role = Role::where('name', $role)->firstOrFail();
+        }
+        $this->roles()->syncWithoutDetaching([$role->id]);
+    }
+
+    // Retire un rôle
+    public function removeRole($role)
+    {
+        if (is_string($role)) {
+            $role = Role::where('name', $role)->first();
+        }
+        if ($role) {
+            $this->roles()->detach($role->id);
+        }
     }
 }
+

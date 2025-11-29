@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('status',['draft','actived','archived'])->default('draft');
             $table->date('date');
 
-            $table->foreignId('users_id')
+            $table->foreignId('users_id')->nullable()
             ->constrained()
             ->onUpdate('cascade')
             ->onDelete('cascade');
